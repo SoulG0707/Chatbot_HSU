@@ -15,6 +15,7 @@ FOLDER_MAP = {
     "Kỹ thuật phần mềm": ("storage_ktpm", "md/ctdt_ktpm.md"),
 }
 
+
 def khoi_tao_index(nganh: str):
     Settings.llm = Ollama(model="llama3", request_timeout=60, temperature=0)
     Settings.embed_model = OllamaEmbedding(model_name="llama3")
@@ -35,6 +36,7 @@ def khoi_tao_index(nganh: str):
     index.storage_context.persist(folder)
     return index
 
+
 def loc_theo_tu_khoa(cau_hoi: str, raw_texts: list[str]) -> str:
     tu_khoa = [
         "tín chỉ", "học phần", "tốt nghiệp", "thời gian", "năm", "điều kiện",
@@ -42,10 +44,12 @@ def loc_theo_tu_khoa(cau_hoi: str, raw_texts: list[str]) -> str:
     ]
     cau_hoi_lower = cau_hoi.lower()
     if any(k in cau_hoi_lower for k in tu_khoa):
-        ket_qua = [t for t in raw_texts if any(k in t.lower() for k in tu_khoa)]
+        ket_qua = [t for t in raw_texts if any(
+            k in t.lower() for k in tu_khoa)]
         if ket_qua:
             return "\n".join(ket_qua)
     return "\n".join(raw_texts)
+
 
 def hoi_ai(index, cau_hoi: str, nganh: str = "") -> str:
     try:
@@ -77,16 +81,17 @@ Cuối câu trả lời phải có dòng sau:
 Câu hỏi: {cau_hoi}
 Trả lời:"""
 
-
         llm = Ollama(model="llama3", request_timeout=60, temperature=0)
         return llm.complete(prompt).text.strip()
     except Exception as e:
         return f"[LỖI]: {e}"
 
+
 def main():
     print("=== Chat với AI HSU (gõ 'exit' để thoát) ===")
     try:
-        nganh = input("Bạn học ngành gì (Trí tuệ nhân tạo / Công nghệ thông tin / Kỹ thuật phần mềm)? ").strip()
+        nganh = input(
+            "Bạn học ngành gì (Trí tuệ nhân tạo / Công nghệ thông tin / Kỹ thuật phần mềm)? ").strip()
         index = khoi_tao_index(nganh)
     except Exception as e:
         print(f"[LỖI KHỞI TẠO]: {e}")
@@ -109,6 +114,7 @@ def main():
             break
         except Exception as err:
             print(f"[LỖI]: {err}")
+
 
 if __name__ == "__main__":
     main()
